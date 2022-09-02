@@ -1,0 +1,2 @@
+# Enable globstar. Hopefully this doesn't break anything
+shopt -s globstar

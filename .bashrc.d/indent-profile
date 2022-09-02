@@ -1,0 +1,2 @@
+# Make indent work properly with the Epitech's norm by default
+export INDENT_PROFILE=~/src/programs/epitech/EpitechNormHelpers/EpitechNormHelpers/util-files/.indent.pro
