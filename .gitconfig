@@ -8,3 +8,10 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[sendemail]
+	smtpServer = smtp.gmail.com
+	smtpServerPort = 587
+	smtpEncryption = tls
+	smtpUser = gabravier@gmail.com
+[credential]
+	helper = /usr/libexec/git-core/git-credential-libsecret
