@@ -16,7 +16,8 @@
  '(flycheck-checker-error-threshold 5000)
  '(font-use-system-font t)
  '(package-selected-packages
-   '(lsp-haskell haskell-mode go-mode rust-mode default-text-scale treemacs-magit magit ccls lsp-helm lsp-treemacs treemacs which-key yasnippet-snippets yasnippet lsp use-package dap-mode flycheck helm-xref helm-lsp helm company-lsp lsp-mode company-c-headers clang-format company)))
+   '(lsp-java lsp-haskell haskell-mode go-mode rust-mode default-text-scale treemacs-magit magit ccls lsp-helm lsp-treemacs treemacs which-key yasnippet-snippets yasnippet lsp use-package dap-mode flycheck helm-xref helm-lsp helm company-lsp lsp-mode company-c-headers clang-format company))
+ '(warning-suppress-types '((comp) (comp) (comp) (comp) (comp) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
