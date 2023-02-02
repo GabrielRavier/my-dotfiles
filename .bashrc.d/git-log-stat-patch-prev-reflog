@@ -1,0 +1,3 @@
+git-log-stat-patch-prev-reflog() {
+    git log -p --reverse --stat HEAD@{1}..HEAD -- "$@"
+}

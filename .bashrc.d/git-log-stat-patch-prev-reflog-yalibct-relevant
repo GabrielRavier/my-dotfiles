@@ -1,3 +1,3 @@
-git-log-stat-patch-prev-reflog-yalibct() {
+git-log-stat-patch-prev-reflog-yalibct-relevant() {
     git diff --stat=400 HEAD@{1} | grep -iFf <(ls -1 ~/src/libraries/libc/tests/yalibct/tests/) | cut -d'|' -f1 | sed 's/^[ \t]*//;s/[ \t]*$//' | xargs -d '\n' git log -p --reverse --stat HEAD@{1}..HEAD -- ./doesnt-exist-hopefully
 }
