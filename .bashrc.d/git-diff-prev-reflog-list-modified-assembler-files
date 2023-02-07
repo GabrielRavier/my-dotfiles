@@ -1,0 +1,3 @@
+git-diff-prev-reflog-list-modified-assembler-files() {
+    git diff --stat=40000 HEAD@{1} | grep -iE '.*\.(s|asm)[^a-z]' | cut -d'|' -f1 | sed 's/^[ \t]*//;s/[ \t]*$//'
+}
