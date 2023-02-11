@@ -1,0 +1,3 @@
+git-log-sort-all-commits-by-date() {
+    git log --all --pretty=format:"%ad %h by %an, %s" --date=iso | sort | less
+}
