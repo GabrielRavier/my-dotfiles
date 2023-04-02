@@ -1,3 +1,7 @@
 git-log-stat-patch-prev-reflog-yalibct-relevant() {
-    git diff --stat=40000 HEAD@{1} | grep -iFf <(ls -1 ~/src/libraries/libc/tests/yalibct/tests/) | cut -d'|' -f1 | sed 's/^[ \t]*//;s/[ \t]*$//' | xargs -d '\n' git log -p --reverse --stat HEAD@{1}..HEAD -- ./doesnt-exist-hopefully
+    git diff --stat=40000 HEAD@{1} | grep -iFf <(ls -1 ~/src/libraries/standard-libraries/c/tests/yalibct/tests/) | cut -d'|' -f1 | sed 's/^[ \t]*//;s/[ \t]*$//' | xargs -d '\n' git log -p --reverse --stat HEAD@{1}..HEAD -- ./file-or-directory-that-doesnt-exist-hopefully
+}
+
+git-log-stat-patch-all-reflog-yalibct-relevant() {
+    git diff --stat=40000 4b825dc642cb6eb9a060e54bf8d69288fbee4904 | grep -iFf <(ls -1 ~/src/libraries/standard-libraries/c/tests/yalibct/tests/) | cut -d'|' -f1 | sed 's/^[ \t]*//;s/[ \t]*$//' | xargs -d '\n' git log -p --reverse --stat 4b825dc642cb6eb9a060e54bf8d69288fbee4904..HEAD -- ./file-or-directory-that-doesnt-exist-hopefully
 }

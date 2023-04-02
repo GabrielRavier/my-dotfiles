@@ -98,6 +98,15 @@
 (setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80))
 (setq-default indent-tabs-mode nil)
 
+;; Make it so that tilde files are instead saved in a consistent directory instead of right next to the file I'm editing
+(setq backup-directory-alist `(("." . "~/.emacs.d/tilde-file-backups-directory")))
+
+(setq delete-old-versions t ;; Don't ask me every time emacs wants to delete excess backups
+      kept-new-versions 10 ;; Number of newest versions to keep
+      version-control t ;; Use version numbers for backups
+      backup-by-copying t ;; Copy files instead of renaming them when doing a backup
+      vc-make-backup-files t) ;; VCS doesn't preclude Emacs's backups
+
 (provide 'init)
 ;;; init.el ends here
 (put 'magit-diff-edit-hunk-commit 'disabled nil)
