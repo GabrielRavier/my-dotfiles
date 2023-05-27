@@ -1,7 +1,7 @@
 git-diff-prev-reflog-list-modified-assembler-files() {
-    git diff --stat=40000 HEAD@{1} | grep -iE '.*\.(s|asm)[^a-z]' | cut -d'|' -f1 | sed 's/^[ \t]*//;s/[ \t]*$//'
+    git diff --stat=40000 --pretty=format: --name-only HEAD@{1} | grep -iE '.*\.(s|asm)($|[^a-z])'
 }
 
 git-diff-all-reflog-list-modified-assembler-files() {
-    git diff --stat=40000 4b825dc642cb6eb9a060e54bf8d69288fbee4904 | grep -iE '.*\.(s|asm)[^a-z]' | cut -d'|' -f1 | sed 's/^[ \t]*//;s/[ \t]*$//'
+    git diff --stat=40000 --pretty=format: --name-only 4b825dc642cb6eb9a060e54bf8d69288fbee4904 | grep -iE '.*\.(s|asm)($|[^a-z])'
 }

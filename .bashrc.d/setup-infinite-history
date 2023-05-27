@@ -2,3 +2,5 @@ HISTFILESIZE=2000000000
 HISTSIZE=2000000000
 HISTFILE=~/.bash_infinite_history
 shopt -s histappend
+
+export LESSHISTSIZE=200000
