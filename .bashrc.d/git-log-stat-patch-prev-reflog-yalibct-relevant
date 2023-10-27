@@ -1,7 +1,7 @@
 git-log-stat-patch-prev-reflog-yalibct-relevant() {
-    printf '%s\n' 'git diff --stat=40000 --pretty=format: --name-only HEAD@{1} | grep -iFf <(ls -1 ~/src/libraries/standard-libraries/c/tests/yalibct/tests/)' 'git diff --stat=40000 --pretty=format: --name-only HEAD@{1} | grep -iE "(conf|mak)[^/]*$|\.m[4k]"' | parallel | xargs -d '\n' git log -p --reverse --stat HEAD@{1}...HEAD -- ./file-or-directory-that-doesnt-exist-hopefully
+    printf '%s\n' 'git diff -z --stat=40000 --pretty=format: --name-only HEAD@{1} | grep -ziFf <(ls -1 ~/src/libraries/programming/languages-implementations/standard-libraries/c/tests/yet-another-libc-testsuite/tests/)' 'git diff -z --stat=40000 --pretty=format: --name-only HEAD@{1} | grep -ziE "(conf|mak)[^/]*$|\.m[4k]"' | parallel | xargs -0 git log -p --reverse --stat HEAD@{1}...HEAD -- ./file-or-directory-that-doesnt-exist-hopefully
 }
 
 git-log-stat-patch-all-reflog-yalibct-relevant() {
-    printf '%s\n' 'git diff --stat=40000 --pretty=format: --name-only 4b825dc642cb6eb9a060e54bf8d69288fbee4904 | grep -iFf <(ls -1 ~/src/libraries/standard-libraries/c/tests/yalibct/tests/)' 'git diff --stat=40000 --pretty=format: --name-only 4b825dc642cb6eb9a060e54bf8d69288fbee4904 | grep -iE "(conf|mak)[^/]*$|\.m[4k]"' | parallel | xargs -d '\n' git log -p --reverse --stat 4b825dc642cb6eb9a060e54bf8d69288fbee4904..HEAD -- ./file-or-directory-that-doesnt-exist-hopefully
+    printf '%s\n' 'git diff -z --stat=40000 --pretty=format: --name-only 4b825dc642cb6eb9a060e54bf8d69288fbee4904 | grep -ziFf <(ls -1 ~/src/libraries/programming/languages-implementations/standard-libraries/c/tests/yet-another-libc-testsuite/tests/)' 'git diff -z --stat=40000 --pretty=format: --name-only 4b825dc642cb6eb9a060e54bf8d69288fbee4904 | grep -ziE "(conf|mak)[^/]*$|\.m[4k]"' | parallel | xargs -0 git log -p --reverse --stat 4b825dc642cb6eb9a060e54bf8d69288fbee4904..HEAD -- ./file-or-directory-that-doesnt-exist-hopefully
 }
