@@ -1,0 +1,5 @@
+# Replace invokations of docker-compose with podman-compose
+alias docker-compose=podman-compose
+
+# podman compose should call podman-compose (even when called as `docker compose`)
+export PODMAN_COMPOSE_PROVIDER=podman-compose

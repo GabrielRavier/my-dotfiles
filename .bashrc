@@ -26,4 +26,3 @@ fi
 
 unset rc
 
-alias docker-compose=podman-compose
