@@ -1,0 +1,67 @@
+llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures() {
+    ANALYSIS_RESULTS_TMPFILE=$(mktemp)
+
+    [ -f "$ANALYSIS_RESULTS_TMPFILE" ] ||
+        {
+            echo "Couldn't create temporary file ????"
+            return 1
+        }
+
+    ( [ -f gcc ] && [ -f clang ] ) ||
+        {
+            echo 'This command requires the presence of files named "gcc" and "clang" in the working directory'
+            return 1
+        }
+
+    echo gcc:
+    cat gcc
+    echo
+
+    echo clang:
+    cat clang
+    echo
+
+    for i in "$@"
+    do
+        printf '%s:\n' "$i"
+        cat "$i"
+    done
+
+    printf 'Which is faster?\tGCC cycles\tClang cycles\tMicro-architecture\n'
+
+    printf '%s\n' core2 nehalem westmere sandybridge ivybridge haswell broadwell skylake bonnell silvermont goldmont goldmont-plus tremont sierraforest grandridge knl knm skylake-avx512 cannonlake icelake-client icelake-server cascadelake cooperlake tigerlake sapphirerapids alderlake rocketlake graniterapids bdver{1,2} znver{1,2,3,4} btver2 |
+        parallel '
+            outputCycles() {
+                cat <(echo .intel_syntax) "$1" |
+                    llvm-mca --mcpu={} |
+                    grep "Total Cycles" |
+                    cut --delimiter=: --fields=2 |
+                    tr --delete " \n"
+            }
+
+            GCC_CYCLES=$(outputCycles gcc)
+            CLANG_CYCLES=$(outputCycles clang);
+
+            [ "$GCC_CYCLES" -gt "$CLANG_CYCLES" ] &&
+                printf "Clang" ||
+                ( [ "$GCC_CYCLES" -lt "$CLANG_CYCLES" ] &&
+                    printf "GCC" ||
+                    printf "neither" )
+            printf "\t\t\t%s\t\t%s\t\t%s\n" "$GCC_CYCLES" "$CLANG_CYCLES" {}' |
+        tee "$ANALYSIS_RESULTS_TMPFILE"
+    echo
+
+    printf 'GCC total cycles: '
+    <"$ANALYSIS_RESULTS_TMPFILE" datamash sum 4
+
+    printf 'Clang total cycles: '
+    <"$ANALYSIS_RESULTS_TMPFILE" datamash sum 6
+
+    for i in GCC Clang neither
+    do
+        printf 'How many times %s took less cycles to run: ' "$i"
+        <"$ANALYSIS_RESULTS_TMPFILE" grep -c "^$i"
+    done
+
+    rm "$ANALYSIS_RESULTS_TMPFILE"
+}
