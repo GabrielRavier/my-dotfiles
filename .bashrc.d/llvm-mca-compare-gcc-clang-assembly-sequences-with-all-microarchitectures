@@ -1,4 +1,4 @@
-llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures() {
+llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-list() {
     ANALYSIS_RESULTS_TMPFILE=$(mktemp)
 
     [ -f "$ANALYSIS_RESULTS_TMPFILE" ] ||
@@ -21,15 +21,9 @@ llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures() {
     cat clang
     echo
 
-    for i in "$@"
-    do
-        printf '%s:\n' "$i"
-        cat "$i"
-    done
-
     printf 'Which is faster?\tGCC cycles\tClang cycles\tMicro-architecture\n'
 
-    printf '%s\n' core2 nehalem westmere sandybridge ivybridge haswell broadwell skylake bonnell silvermont goldmont goldmont-plus tremont sierraforest grandridge knl knm skylake-avx512 cannonlake icelake-client icelake-server cascadelake cooperlake tigerlake sapphirerapids alderlake rocketlake graniterapids bdver{1,2} znver{1,2,3,4} btver2 |
+    printf '%s' "$1" | tr ' ' '\n' | grep . |
         parallel '
             outputCycles() {
                 cat <(echo .intel_syntax) "$1" |
@@ -64,4 +58,8 @@ llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures() {
     done
 
     rm "$ANALYSIS_RESULTS_TMPFILE"
+}
+
+llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-x86-64() {
+    llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-list "core2 nehalem westmere sandybridge ivybridge haswell broadwell skylake bonnell silvermont goldmont goldmont-plus tremont sierraforest grandridge knl knm skylake-avx512 cannonlake icelake-client icelake-server cascadelake cooperlake tigerlake sapphirerapids alderlake rocketlake graniterapids bdver1 bdver2 znver1 znver2 znver3 znver4 btver2"
 }
