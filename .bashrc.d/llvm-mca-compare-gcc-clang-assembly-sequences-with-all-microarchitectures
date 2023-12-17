@@ -26,7 +26,7 @@ llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-p
     # We simplify using Intel syntax by automatically prepending .intel_syntax to x86 assembly
     # We also simplify using MIPS syntax by automatically prepending .set noat and .set noreorder to MIPS assembly
     local ASSEMBLY_PREFIXED_PART
-    ASSEMBLY_PREFIXED_PART=`printf '%s\n' "$1" | { grep -qE '^x86(-64)?$' && { printf '.intel_syntax\n'; } }; printf '%s\n' "$1" | { grep -qE '^mips(64)?(el)?' && { printf '.set noreorder\n.set noat\n'; } }`
+    ASSEMBLY_PREFIXED_PART=`printf '%s\n' "$1" | { grep -qE '^x86(-64)?$' && { printf '.intel_syntax\n'; } }; printf '%s\n' "$1" | { grep -qE '^mips(64)?(el)?$' && { printf '.set noreorder\n.set noat\n'; } }`
 
     printf '%s' "$2" | tr ' ' '\n' | grep . |
         parallel --keep-order '
