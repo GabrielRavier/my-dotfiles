@@ -39,7 +39,7 @@ llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-p
             }
 
             GCC_CYCLES=$(outputCycles gcc)
-            CLANG_CYCLES=$(outputCycles clang);
+            CLANG_CYCLES=$(outputCycles clang)
 
             [ "$GCC_CYCLES" -gt "$CLANG_CYCLES" ] &&
                 printf "Clang" ||
@@ -85,12 +85,12 @@ llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-riscv3
     llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "riscv32" "rocket-rv32 sifive-e20 sifive-e21 sifive-e24 sifive-e31 sifive-e34 sifive-e76 syntacore-scr1-base syntacore-scr1-max"
 }
 
-llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-aarch32-no-push-instructions() {
-    llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "arm" "cortex-a9 cortex-a12 cortex-a15 cortex-a17 krait swift cortex-m3 sc300 cortex-m4 cortex-m7 cortex-m33 cortex-m35p cortex-m55 cortex-m85 cortex-a57 cortex-a72 cyclone cortex-r52"
+llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-aarch32-has-push-instructions() {
+    llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "arm" "swift cortex-m3 sc300 cortex-m4 cortex-m7 cortex-m33 cortex-m35p cortex-m55 cortex-m85 cortex-a57 cortex-a72 cyclone cortex-r52"
 }
 
 llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-aarch32() {
-    llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "arm" "swift cortex-m3 sc300 cortex-m4 cortex-m7 cortex-m33 cortex-m35p cortex-m55 cortex-m85 cortex-a57 cortex-a72 cyclone cortex-r52"
+    llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "arm" "cortex-a9 cortex-a12 cortex-a15 cortex-a17 krait swift cortex-m3 sc300 cortex-m4 cortex-m7 cortex-m33 cortex-m35p cortex-m55 cortex-m85 cortex-a57 cortex-a72 cyclone cortex-r52"
 }
 
 llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-powerpc64le() {
@@ -107,6 +107,14 @@ llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-mips64
 
 llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-mips64el-only-64bit-processors() {
     llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mips64el" "generic mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+"
+}
+
+llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-mips64be() {
+    llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mips64" "generic mips1 mips2 mips32 mips32r2 mips32r3 mips32r5 mips32r6 mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+ p5600"
+}
+
+llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-mips64be-only-64bit-processors() {
+    llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mips64" "generic mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+"
 }
 
 llvm-mca-compare-gcc-clang-assembly-sequences-with-all-microarchitectures-mips32el() {
