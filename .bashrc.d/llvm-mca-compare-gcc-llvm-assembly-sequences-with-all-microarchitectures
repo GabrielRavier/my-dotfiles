@@ -1,0 +1,131 @@
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list() {
+    ANALYSIS_RESULTS_TMPFILE=$(mktemp)
+
+    [ -f "$ANALYSIS_RESULTS_TMPFILE" ] ||
+        {
+            echo "Couldn't create temporary file ????"
+            return 1
+        }
+
+    ( [ -f gcc ] && [ -f llvm ] ) ||
+        {
+            echo 'This command requires the presence of files named "gcc" and "llvm" in the working directory'
+            return 1
+        }
+
+    echo gcc:
+    cat gcc
+    echo
+
+    echo llvm:
+    cat llvm
+    echo
+
+    printf 'Which is faster?\tGCC cycles\tLLVM cycles\tMicro-architecture\n'
+
+    # We simplify using Intel syntax by automatically prepending .intel_syntax to x86 assembly
+    # We also simplify using MIPS syntax by automatically prepending .set noat and .set noreorder to MIPS assembly
+    local ASSEMBLY_PREFIXED_PART
+    ASSEMBLY_PREFIXED_PART=`printf '%s\n' "$1" | { grep -qE '^x86(-64)?$' && { printf '.intel_syntax\n'; } }; printf '%s\n' "$1" | { grep -qE '^mips(64)?(el)?$' && { printf '.set noreorder\n.set noat\n'; } }`
+
+    printf '%s' "$2" | tr ' ' '\n' | grep . |
+        parallel --keep-order '
+            outputCycles() {
+                cat <(printf "%s\n" "'"$ASSEMBLY_PREFIXED_PART"'") "$1" |
+                    llvm-mca -noalias=true -march='"$1"' -mcpu={} |
+                    grep "Total Cycles" |
+                    cut --delimiter=: --fields=2 |
+                    tr --delete " \n"
+            }
+
+            GCC_CYCLES=$(outputCycles gcc)
+            LLVM_CYCLES=$(outputCycles llvm)
+
+            [ "$GCC_CYCLES" -gt "$LLVM_CYCLES" ] &&
+                printf "LLVM" ||
+                ( [ "$GCC_CYCLES" -lt "$LLVM_CYCLES" ] &&
+                    printf "GCC" ||
+                    printf "neither" )
+            printf "\t\t\t%s\t\t%s\t\t%s\n" "$GCC_CYCLES" "$LLVM_CYCLES" {}' |
+        tee "$ANALYSIS_RESULTS_TMPFILE"
+    echo
+
+    printf 'GCC total cycles: '
+    <"$ANALYSIS_RESULTS_TMPFILE" datamash sum 4
+
+    printf 'LLVM total cycles: '
+    <"$ANALYSIS_RESULTS_TMPFILE" datamash sum 6
+
+    for i in GCC LLVM neither
+    do
+        printf 'How many times %s took less cycles to run: ' "$i"
+        <"$ANALYSIS_RESULTS_TMPFILE" grep -c "^$i"
+    done
+
+    rm "$ANALYSIS_RESULTS_TMPFILE"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-x86-64() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "x86-64" "generic x86-64 x86-64-v2 x86-64-v3 x86-64-v4 yonah core2 penryn bonnell silvermont goldmont goldmont-plus tremont sierraforest grandridge nehalem westmere sandybridge ivybridge haswell broadwell skylake knl knm skylake-avx512 cascadelake cooperlake cannonlake icelake-client rocketlake icelake-server tigerlake sapphirerapids alderlake raptorlake meteorlake graniterapids emeraldrapids btver2 bdver1 bdver2 znver1 znver2 znver3 znver4"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-x86-32() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "x86" "generic x86-64 x86-64-v2 x86-64-v3 x86-64-v4 yonah core2 penryn bonnell silvermont goldmont goldmont-plus tremont sierraforest grandridge nehalem westmere sandybridge ivybridge haswell broadwell skylake knl knm skylake-avx512 cascadelake cooperlake cannonlake icelake-client rocketlake icelake-server tigerlake sapphirerapids alderlake raptorlake meteorlake graniterapids emeraldrapids btver2 bdver1 bdver2 znver1 znver2 znver3 znver4"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-aarch64() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "aarch64" "generic cortex-a35 cortex-a34 cortex-a55 cortex-a510 cortex-a57 cortex-a65 cortex-a65ae cortex-a72 cortex-a73 cortex-a75 cortex-a76 cortex-a76ae cortex-a77 cortex-a78 cortex-a78c cortex-a710 cortex-a715 cortex-r82 cortex-x1 cortex-x1c cortex-x2 cortex-x3 neoverse-e1 neoverse-n1 neoverse-n2 neoverse-512tvb neoverse-v1 neoverse-v2 exynos-m3 exynos-m4 exynos-m5 falkor saphira kryo thunderx thunderxt88 thunderxt81 thunderxt83 thunderx2t99 thunderx3t110 tsv110 cyclone apple-a7 apple-a8 apple-a9 apple-a10 apple-a11 apple-a12 apple-a13 apple-a14 apple-a15 apple-a16 apple-m1 apple-m2 apple-s4 apple-s5 apple-latest a64fx ampere1 ampere1a"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-riscv64() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "riscv64" "rocket-rv64 sifive-s21 sifive-s51 sifive-s54 sifive-s76 sifive-u54 sifive-u74"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-riscv32() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "riscv32" "rocket-rv32 sifive-e20 sifive-e21 sifive-e24 sifive-e31 sifive-e34 sifive-e76 syntacore-scr1-base syntacore-scr1-max"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-aarch32-has-push-instructions() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "arm" "swift cortex-m3 sc300 cortex-m4 cortex-m7 cortex-m33 cortex-m35p cortex-m55 cortex-m85 cortex-a57 cortex-a72 cyclone cortex-r52"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-aarch32() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "arm" "cortex-a9 cortex-a12 cortex-a15 cortex-a17 krait swift cortex-m3 sc300 cortex-m4 cortex-m7 cortex-m33 cortex-m35p cortex-m55 cortex-m85 cortex-a57 cortex-a72 cyclone cortex-r52"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-powerpc64le() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "ppc64le" "pwr9 pwr10"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-powerpc32be() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "ppc32" "pwr9 pwr10"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips64el() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mips64el" "generic mips1 mips2 mips32 mips32r2 mips32r3 mips32r5 mips32r6 mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+ p5600"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips64el-only-64bit-processors() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mips64el" "generic mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips64be() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mips64" "generic mips1 mips2 mips32 mips32r2 mips32r3 mips32r5 mips32r6 mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+ p5600"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips64be-only-64bit-processors() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mips64" "generic mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips32el() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mipsel" "generic mips1 mips2 mips32 mips32r2 mips32r3 mips32r5 mips32r6 mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+ p5600"
+}
+
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips32el() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mipsel" "generic mips1 mips2 mips32 mips32r2 mips32r3 mips32r5 mips32r6 mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+ p5600"
+}
+
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-s390x() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "systemz" "z196 zEC12 z13 z14 z15 z16"
+}
