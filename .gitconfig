@@ -17,3 +17,7 @@
 	helper = /usr/libexec/git-core/git-credential-libsecret
 [merge]
 	conflictStyle = zdiff3
+[rerere]
+	enabled = true
+[diff]
+	algorithm = histogram
