@@ -15,3 +15,5 @@
 	smtpUser = gabravier@gmail.com
 [credential]
 	helper = /usr/libexec/git-core/git-credential-libsecret
+[merge]
+	conflictStyle = zdiff3
