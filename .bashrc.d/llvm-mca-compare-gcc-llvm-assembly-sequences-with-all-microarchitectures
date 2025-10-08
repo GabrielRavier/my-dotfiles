@@ -1,3 +1,5 @@
+# TODO: Update this for latest LLVM
+
 llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list() {
     ANALYSIS_RESULTS_TMPFILE=$(mktemp)
 
