@@ -1,5 +1,5 @@
 HISTFILESIZE=2000000000
-HISTSIZE=2000000000
+HISTSIZE=200000000
 HISTFILE=~/.bash_infinite_history
 shopt -s histappend
 
