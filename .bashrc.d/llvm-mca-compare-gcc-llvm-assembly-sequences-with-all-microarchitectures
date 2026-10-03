@@ -1,17 +1,17 @@
 # TODO: Update this for latest LLVM
 
 llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list() {
+    ( [ -f gcc ] && [ -f llvm ] ) ||
+        {
+            echo 'This command requires the presence of files named "gcc" and "llvm" in the working directory'
+            return 1
+        }
+
     ANALYSIS_RESULTS_TMPFILE=$(mktemp)
 
     [ -f "$ANALYSIS_RESULTS_TMPFILE" ] ||
         {
             echo "Couldn't create temporary file ????"
-            return 1
-        }
-
-    ( [ -f gcc ] && [ -f llvm ] ) ||
-        {
-            echo 'This command requires the presence of files named "gcc" and "llvm" in the working directory'
             return 1
         }
 
@@ -144,8 +144,8 @@ llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips32e
     llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mipsel" "generic mips1 mips2 mips32 mips32r2 mips32r3 mips32r5 mips32r6 mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+ p5600"
 }
 
-llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips32el() {
-    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mipsel" "generic mips1 mips2 mips32 mips32r2 mips32r3 mips32r5 mips32r6 mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+ p5600"
+llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-mips32be() {
+    llvm-mca-compare-gcc-llvm-assembly-sequences-with-all-microarchitectures-with-provided-architecture-and-microarchitecture-list "mips" "generic mips1 mips2 mips32 mips32r2 mips32r3 mips32r5 mips32r6 mips3 mips4 mips5 mips64 mips64r2 mips64r3 mips64r5 mips64r6 octeon octeon+ p5600"
 }
 
 
