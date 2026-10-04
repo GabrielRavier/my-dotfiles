@@ -21,3 +21,20 @@
 	enabled = true
 [diff]
 	algorithm = histogram
+	colorMoved = dimmed-zebra
+	colorMovedWS = allow-indentation-change
+	mnemonicPrefix = true
+	renames = copies
+[rebase]
+	autosquash = true
+	autostash = true
+[commit]
+	verbose = 2
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[push]
+	followTags = true
+[help]
+	autocorrect = prompt
